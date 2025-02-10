@@ -103,5 +103,7 @@ bool already_answered(char *category, int value)
             return questions[i].answered;
         }
     }
+
+    // lookup the question and see if it's already been marked as answered
     return false;
 }
