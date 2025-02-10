@@ -12,7 +12,8 @@
 
 // Initializes the array of questions for the game
 void initialize_game(void)
-{
+{   
+    printf("hello salum");
     // Assigning category names and initializing question details
     for (int i = 0; i < NUM_QUESTIONS; i++) {
         strcpy(questions[i].category, categories[i % NUM_CATEGORIES]);

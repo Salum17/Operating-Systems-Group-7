@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     
     // Input buffer and and commands
     char buffer[BUFFER_LEN] = { 0 };
-
+    
     // Display the game introduction and initialize the questions
     initialize_game();
 
