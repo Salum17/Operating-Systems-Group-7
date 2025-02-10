@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "questionslist.h"
+#include "questions.h"
 
 // Initializes the array of questions for the game
 void initialize_game(void)
