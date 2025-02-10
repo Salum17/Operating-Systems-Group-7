@@ -5,8 +5,8 @@
  * All rights reserved.
  *
  */
-#ifndef QUESTIONS_H_
-#define QUESTIONS_H_
+#ifndef QUESTIONSLIST_H_
+#define QUESTIONSLIST_H_
 
 #include <stdbool.h>
 
@@ -51,4 +51,4 @@ extern bool valid_answer(char *category, int value, char *answer);
 // Returns true if the question has already been answered
 extern bool already_answered(char *category, int value);
 
-#endif /* QUESTIONS_H_ */
+#endif /* QUESTIONSLIST_H_ */
