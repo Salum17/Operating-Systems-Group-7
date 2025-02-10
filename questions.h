@@ -1,7 +1,7 @@
 /*
  * Jeopardy Project for SOFE 3950U / CSCI 3020U: Operating Systems
  *
- * Copyright (C) 2025, Danial Shaikh & Group Members
+ * Copyright (C) 2025, Danial Shaikh & Group 7 Members
  * All rights reserved.
  *
  */
