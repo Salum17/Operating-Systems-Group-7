@@ -16,9 +16,9 @@
 
 // List of 3 categories as an array of strings
 static char categories[NUM_CATEGORIES][MAX_LEN] = {
-    "Marvel Heroes",
-    "Marvel Movies",
-    "Marvel Villains"
+    "Marvel",
+    "Science",
+    "History"
 };
 
 // Struct to store each question
