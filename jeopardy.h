@@ -9,6 +9,7 @@
 #define JEOPARDY_H_
 
 #define MAX_LEN 256
+#define NUM_PLAYERS 4
 
 // Processes the answer from the user containing what is or who is and tokenizes it to retrieve the answer.
 extern void tokenize(char *input, char **tokens);

@@ -9,60 +9,116 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <time.h>
 #include "questions.h"
 #include "players.h"
 #include "jeopardy.h"
 
-// Put macros or constants here using #define
 #define BUFFER_LEN 256
 #define NUM_PLAYERS 4
 
-// Put global environment variables here
-
-// Processes the answer from the user containing what is or who is and tokenizes it to retrieve the answer.
-void tokenize(char *input, char **tokens);
-
-// Displays the game results for each player, their name and final score, ranked from first to last place
-void show_results(player *players, int num_players);
-
-
-int main(int argc, char *argv[])
+// Tokenize the input to extract the answer
+void tokenize(char *input, char **tokens)
 {
-    // An array of 4 players, may need to be a pointer if you want it set dynamically
-    player players[NUM_PLAYERS];
-    
-    // Input buffer and and commands
-    char buffer[BUFFER_LEN] = { 0 };
-    
-    // Display the game introduction and initialize the questions
-    initialize_game();
-    // Display the game introduction
-    printf("Welcome to Jeopardy!\n");
-    printf("Game Rules: Answer the questions by typing in your response. Each question will have a prompt.\n");
-    printf("Let's start the game!\n\n");
-  
+    char *token = strtok(input, " ");
+    int i = 0;
+    while (token != NULL && i < 2)
+    {
+        tokens[i++] = token;
+        token = strtok(NULL, " ");
+    }
+    tokens[i] = NULL;
+}
 
-    // Prompt for players names
-    for (int i = 0; i < NUM_PLAYERS; i++) {
+// Display results ranked from first to last place
+void show_results(player *players, int num_players)
+{
+    printf("\nFinal Results:\n");
+    for (int i = 0; i < num_players; i++)
+    {
+        printf("%s: $%d\n", players[i].name, players[i].score);
+    }
+}
+
+int main()
+{
+    player players[NUM_PLAYERS];
+    char buffer[BUFFER_LEN];
+    char *tokens[3];
+    srand(time(NULL));
+
+    // Initialize game and players
+    initialize_game();
+    printf("Welcome to Jeopardy!\n");
+    for (int i = 0; i < NUM_PLAYERS; i++)
+    {
         printf("Enter the name of player %d: ", i + 1);
         fgets(players[i].name, BUFFER_LEN, stdin);
-        players[i].name[strcspn(players[i].name, "\n")] = 0;  // Remove newline character
+        players[i].name[strcspn(players[i].name, "\n")] = 0;
+        players[i].score = 0;
     }
-    // initialize each of the players in the array
 
-    // Perform an infinite loop getting command input from users until game ends
-    while (fgets(buffer, BUFFER_LEN, stdin) != NULL)
+    // Game loop
+    while (1)
     {
-        printf("Waiting for game input...\n");
+        display_categories();
+        int current_player = rand() % NUM_PLAYERS;
+        printf("\n%s, it's your turn to pick a category and value!\n", players[current_player].name);
+
+        char category[MAX_LEN];
+        int value;
+        printf("Enter category: ");
+        fgets(category, MAX_LEN, stdin);
+        category[strcspn(category, "\n")] = 0;
+
+        printf("Enter value: ");
+        scanf("%d", &value);
+        getchar(); // Consume newline
+
+        if (already_answered(category, value))
+        {
+            printf("This question has already been answered. Please choose another.\n");
+            continue;
+        }
+
+        display_question(category, value);
+        printf("Your answer (start with 'what is' or 'who is'): ");
+        fgets(buffer, BUFFER_LEN, stdin);
+        buffer[strcspn(buffer, "\n")] = 0;
+
+        tokenize(buffer, tokens);
+        if (tokens[0] == NULL || (strcasecmp(tokens[0], "what") != 0 && strcasecmp(tokens[0], "who") != 0))
+        {
+            printf("Invalid answer format. Please start with 'what is' or 'who is'.\n");
+            continue;
+        }
+
+        if (valid_answer(category, value, tokens[1]))
+        {
+            printf("Correct!\n");
+            update_score(players, NUM_PLAYERS, players[current_player].name, value);
+        }
+        else
+        {
+            printf("Incorrect! The correct answer is: %s\n", get_answer(category, value));
+        }
+
+        mark_answered(category, value);
+
+        // Check if all questions are answered
+        bool all_answered = true;
+        for (int i = 0; i < NUM_QUESTIONS; i++)
+        {
+            if (!questions[i].answered)
+            {
+                all_answered = false;
+                break;
+            }
+        }
+        if (all_answered)
+            break;
     }
-    // Display results (for now, this is a placeholder)
+
     show_results(players, NUM_PLAYERS);
-    return EXIT_SUCCESS;
-}
-// Placeholder function to show results
-void show_results(player *players, int num_players) {
-    printf("\nFinal Results:\n");
-    for (int i = 0; i < num_players; i++) {
-        printf("%s: Score %d\n", players[i].name, players[i].score);
-    }
+    return 0;
 }
